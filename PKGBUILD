@@ -109,6 +109,9 @@ _archive_sum='9e43869d6b016aedd7f0a4b22b4c068b8af5c3569ed7a66c63225c388d15cce9'
 _evmfs_uri="${_evmfs_dir}/${_archive_sum}"
 _http_uri="${_url}/archive/${pkgver}.tar.gz"
 if [[ "${_evmfs}" == "true" ]]; then
+  makedepends+=(
+    "evmfs"
+  )
   _src="${_tarname}.tar.gz::${_evmfs_uri}"
 elif [[ "${_evmfs}" == "false" ]]; then
   _src="${_tarname}.tar.gz::${_http_uri}"
