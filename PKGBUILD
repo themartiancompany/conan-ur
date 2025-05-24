@@ -102,25 +102,39 @@ _url="${_http}/${_ns}/${_pkg}"
 _tarname="${_pkg}-${pkgver}"
 _evmfs_network="17000"
 _evmfs_fs="0x151920938488F193735e83e052368cD41F9d9362"
+_evmfs_sig_network="100"
+_evmfs_sig_fs="0x69470b18f8b8b5f92b48f6199dcb147b4be96571"
 # Dvorak namespace
 _evmfs_ns="0x87003Bd6C074C713783df04f36517451fF34CBEf"
 _evmfs_dir="evmfs://${_evmfs_network}/${_evmfs_fs}/${_evmfs_ns}"
+_evmfs_sig_dir="evmfs://${_evmfs_sig_network}/${_evmfs_sig_fs}/${_evmfs_ns}"
 _archive_sum='9e43869d6b016aedd7f0a4b22b4c068b8af5c3569ed7a66c63225c388d15cce9'
-_evmfs_uri="${_evmfs_dir}/${_archive_sum}"
+_sig_sum="681b70e43488d4e01b3cd9bbbfe9169859f19ef5f5516108420be01043815457"
+_evmfs_archive_uri="${_evmfs_dir}/${_archive_sum}"
+_evmfs_sig_uri="${_evmfs_sig_dir}/${_sig_sum}"
 _http_uri="${_url}/archive/${pkgver}.tar.gz"
+source=()
+sha256sums=()
 if [[ "${_evmfs}" == "true" ]]; then
   makedepends+=(
     "evmfs"
   )
-  _src="${_tarname}.tar.gz::${_evmfs_uri}"
+  _src="${_tarname}.tar.gz::${_evmfs_archive_uri}"
+  _sig_src="${_tarname}.tar.gz.sig::${_evmfs_sig_uri}"
+  source+=(
+    "${_sig_src}"
+  )
+  sha256sums+=(
+    "${_sig_sum}"
+  )
 elif [[ "${_evmfs}" == "false" ]]; then
   _src="${_tarname}.tar.gz::${_http_uri}"
 fi
-source=(
+source+=(
   "${_src}"
   "arch-reqs.patch"
 )
-sha256sums=(
+sha256sums+=(
   "${_archive_sum}"
   'c8a8c67ee6847c077c4e361a633fb4772c0d30bd448a334e43ba786ce408b419'
 )
